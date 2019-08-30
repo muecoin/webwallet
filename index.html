@@ -1,28 +1,19 @@
 <html>
  <head>
-    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png?v=3">
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png?v=3">
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png?v=3">
-    <link rel="manifest" href="./favicons/site.webmanifest?v=3">
-    <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg?v=3" color="#5bbad5">
-    <link rel="shortcut icon" href="./favicons/favicon.ico?v=3">
-    <meta name="msapplication-TileColor" content="#2b5797">
-    <meta name="msapplication-TileImage" content="./favicons/mstile-144x144.png?v=3">
-    <meta name="msapplication-config" content="./favicons/browserconfig.xml?v=3">
-    <meta name="theme-color" content="#123899">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#f8921a">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
     <script src="./js/jquery-1.11.1.min.js"></script>
     <link href="./css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="./js/bootstrap.min.js"></script>
     <link href="./css/styles.css" rel="stylesheet" id="styles-css">
-    <link rel="icon" type="image/png" href="./images/favicon.png?v=3">
     <script type="text/javascript" src="./js/instascan.min.js"></script>
     <script src="./js/cc.js"></script>
     <script src="./js/clipboard.min.js"></script>
     <script src="./js/cookie.js"></script>
     <script src="./js/script.js"></script>
-    <title>SwiftCash - Web Wallet</title>
+    <title>MonetaryUnit - Web Wallet</title>
  </head>
 
  <body>
@@ -35,7 +26,7 @@
       <section class="form">
 	<div id="pwd-container">
         <form method="post" action="javascript:login();" role="login" style="padding-bottom: 2px;">
-          <a href="https://swiftcash.cc/wallets.html" target="_blank"><img style="width: 240px;" src="./images/logo.png" class="img-responsive" alt="" /></a>
+          <a href="https://monetaryunit.org/wallets.html" target="_blank"><img style="width: 240px;" src="./images/logo.png" class="img-responsive" alt="" /></a>
 
             <div style="padding-bottom: 15px">
               <input id="email" type="email" name="email" placeholder="Email" required class="form-control input-lg" value="" />
@@ -61,7 +52,7 @@
 	<div id="addr-container" style="display: none;">
         <form method="post" action="javascript:spendf();" role="spend" style="padding-bottom: 2px;">
 	<div class="row" style="display: flex; justify-content: center; align-items: center;">
-          <div title="SWIFT" class="col-md-3 currency-logo" style="filter: drop-shadow(1px 1px 2px #4b4b4c); padding: 2px; width: 52px;"><a href="javascript:switchCoin('SWIFT');"><img src="./images/swiftcash.png" class="img-responsive" alt="" /></a></div>
+          <div title="MUE" class="col-md-3 currency-logo" style="filter: drop-shadow(1px 1px 2px #4b4b4c); padding: 2px; width: 52px;"><a href="javascript:switchCoin('MUE');"><img src="./images/monetaryunit.png" class="img-responsive" alt="" /></a></div>
 	  <div title="BTC" class="col-md-3 currency-logo" style="padding: 2px; width: 53px;"><a href="javascript:switchCoin('BTC');"><img src="./images/bitcoin.png" class="img-responsive" alt="" /></a></div>
 	  <div title="LTC" class="col-md-3 currency-logo" style="padding: 2px; width: 52px;"><a href="javascript:switchCoin('LTC');"><img src="./images/litecoin.png" class="img-responsive" alt="" /></a></div>
 	  <div title="DOGE" class="col-md-3 currency-logo" style="padding: 2px; width: 53px;"><a href="javascript:switchCoin('DOGE');"><img src="./images/dogecoin.png" class="img-responsive" alt="" /></a></div>
@@ -69,12 +60,12 @@
 
             <div class="row">
 	      <div class="alert alert-info fade in" style="margin-bottom: 0px; padding-left: 5px; padding-right: 5px; font-weight: bold; font-size: 12px;">
-                <a href="" target="_blank" style="font-size: 1.05em;" id="addr-id">SWIFTADDRESS</a>
-	        <button id="addr-id-clipboard" type="button" class="btn btn-primary clipboard" data-clipboard-text="SWIFTADDRESS">
+                <a href="" target="_blank" style="font-size: 1.05em;" id="addr-id">Address</a>
+	        <button id="addr-id-clipboard" type="button" class="btn btn-primary clipboard" data-clipboard-text="AADDRESS">
 			<i class="fa fa-copy"></i>
 		</button>
                 <div style="margin-top: 2px;">
-		  <a href="javascript:togglePrice();" class="label hvr-buzz-out label-primary" id="addr-balance" style="vertical-align: middle; font-size: 11.8px; padding: 4.3px;">Balance: 0.00000000 SWIFT</a>
+		  <a href="javascript:togglePrice();" class="label hvr-buzz-out label-primary" id="addr-balance" style="vertical-align: middle; font-size: 11.8px; padding: 4.3px;">Balance: 0.00000000 MUE</a>
                 <button id="addr-balance-refresh" type="button" class="btn btn-primary refresh" onclick="javascript:loadAddress();">
 			<i class="fa fa-bolt" style="width: 14px;"></i>
 		</button>
@@ -127,12 +118,6 @@
             </div>
         </form>
 	</div>
-        <div class="form-links">| 
-          <a target="_blank" href="https://explorer.swiftcash.cc/">Explorer</a> | 
-          <a target="_blank" href="https://swiftcash.cc/assets/whitepaper.pdf">Whitepaper</a> | 
-          <a target="_blank" href="http://discord.swiftcash.cc/">Support</a> |
-          <a target="_blank" href="https://github.com/swiftcashproject/webwallet">Github</a> |
-        </div>
       </section>  
       </div>      
       <div class="col-md-4"></div>
