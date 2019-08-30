@@ -1,16 +1,16 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.cc = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-let swiftcash = require('swiftcashjs-lib');
+let monetaryunit = require('monetaryunitjs-lib');
 let bitcoin = require('bitcoinjs-lib');
 let bigi = require('bigi');
 
 module.exports = {
-  swiftcash,
+  monetaryunit,
   bitcoin,
   bigi
 }
 
 
-},{"bigi":6,"bitcoinjs-lib":19,"swiftcashjs-lib":88}],2:[function(require,module,exports){
+},{"bigi":6,"bitcoinjs-lib":19,"monetaryunitjs-lib":88}],2:[function(require,module,exports){
 // base-x encoding
 // Forked from https://github.com/cryptocoinjs/bs58
 // Originally written by Mike Hearn for BitcoinJ
@@ -2689,7 +2689,7 @@ function verify (hash, signature, Q) {
   var r = signature.r
   var s = signature.s
 
-  // 1.4.1 Enforce r and s are both integers in the interval [1, n − 1]
+  // 1.4.1 Enforce r and s are both integers in the interval [1, n Ξ²ΒΒ’ 1]
   if (r.signum() <= 0 || r.compareTo(n) >= 0) return false
   if (s.signum() <= 0 || s.compareTo(n) >= 0) return false
 
@@ -2700,8 +2700,8 @@ function verify (hash, signature, Q) {
   // Compute s^-1
   var sInv = s.modInverse(n)
 
-  // 1.4.4 Compute u1 = es^−1 mod n
-  //               u2 = rs^−1 mod n
+  // 1.4.4 Compute u1 = es^Ξ²ΒΒ’1 mod n
+  //               u2 = rs^Ξ²ΒΒ’1 mod n
   var u1 = e.multiply(sInv).mod(n)
   var u2 = r.multiply(sInv).mod(n)
 
@@ -9148,7 +9148,7 @@ module.exports = Sha512
 },{"./hash":72,"inherits":64,"safe-buffer":71}],80:[function(require,module,exports){
 var Buffer = require('safe-buffer').Buffer
 var bech32 = require('bech32')
-var bs58check = require('bs58swiftcheck')
+var bs58check = require('bs58monetaryunitcheck')
 var bscript = require('./script')
 var btemplates = require('./templates')
 var networks = require('./networks')
@@ -9197,7 +9197,7 @@ function toBech32 (data, version, prefix) {
 }
 
 function fromOutputScript (outputScript, network) {
-  network = network || networks.swiftcash
+  network = network || networks.monetaryunit
 
   if (btemplates.pubKeyHash.output.check(outputScript)) return toBase58Check(bscript.compile(outputScript).slice(3, 23), network.pubKeyHash)
   if (btemplates.scriptHash.output.check(outputScript)) return toBase58Check(bscript.compile(outputScript).slice(2, 22), network.scriptHash)
@@ -9208,7 +9208,7 @@ function fromOutputScript (outputScript, network) {
 }
 
 function toOutputScript (address, network) {
-  network = network || networks.swiftcash
+  network = network || networks.monetaryunit
 
   var decode
   try {
@@ -9244,7 +9244,7 @@ module.exports = {
   toOutputScript: toOutputScript
 }
 
-},{"./networks":89,"./script":90,"./templates":92,"./types":116,"bech32":3,"bs58swiftcheck":51,"safe-buffer":71,"typeforce":119}],81:[function(require,module,exports){
+},{"./networks":89,"./script":90,"./templates":92,"./types":116,"bech32":3,"bs58monetaryunitcheck":51,"safe-buffer":71,"typeforce":119}],81:[function(require,module,exports){
 arguments[4][12][0].apply(exports,arguments)
 },{"./crypto":83,"./transaction":114,"./types":116,"dup":12,"merkle-lib/fastRoot":67,"safe-buffer":71,"typeforce":119,"varuint-bitcoin":121}],82:[function(require,module,exports){
 arguments[4][13][0].apply(exports,arguments)
@@ -9297,7 +9297,7 @@ var ecdsa = require('./ecdsa')
 var randomBytes = require('randombytes')
 var typeforce = require('typeforce')
 var types = require('./types')
-var wif = require('wif-swift')
+var wif = require('wif-monetaryunit')
 
 var NETWORKS = require('./networks')
 var BigInteger = require('bigi')
@@ -9328,7 +9328,7 @@ function ECPair (d, Q, options) {
   }
 
   this.compressed = options.compressed === undefined ? true : options.compressed
-  this.network = options.network || NETWORKS.swiftcash
+  this.network = options.network || NETWORKS.monetaryunit
 }
 
 Object.defineProperty(ECPair.prototype, 'Q', {
@@ -9362,9 +9362,9 @@ ECPair.fromWIF = function (string, network) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to swiftcash)
+  // otherwise, assume a network object (or default to monetaryunit)
   } else {
-    network = network || NETWORKS.swiftcash
+    network = network || NETWORKS.monetaryunit
 
     if (version !== network.wif) throw new Error('Invalid network version')
   }
@@ -9423,7 +9423,7 @@ ECPair.prototype.verify = function (hash, signature) {
 
 module.exports = ECPair
 
-},{"./address":80,"./crypto":83,"./ecdsa":84,"./networks":89,"./types":116,"bigi":6,"ecurve":60,"randombytes":69,"typeforce":119,"wif-swift":122}],86:[function(require,module,exports){
+},{"./address":80,"./crypto":83,"./ecdsa":84,"./networks":89,"./types":116,"bigi":6,"ecurve":60,"randombytes":69,"typeforce":119,"wif-monetaryunit":122}],86:[function(require,module,exports){
 (function (Buffer){
 var bip66 = require('bip66')
 var typeforce = require('typeforce')
@@ -9526,7 +9526,7 @@ module.exports = ECSignature
 }).call(this,require("buffer").Buffer)
 },{"./types":116,"bigi":6,"bip66":8,"buffer":130,"typeforce":119}],87:[function(require,module,exports){
 var Buffer = require('safe-buffer').Buffer
-var base58check = require('bs58swiftcheck')
+var base58check = require('bs58monetaryunitcheck')
 var bcrypto = require('./crypto')
 var createHmac = require('create-hmac')
 var typeforce = require('typeforce')
@@ -9553,7 +9553,7 @@ function HDNode (keyPair, chainCode) {
 
 HDNode.HIGHEST_BIT = 0x80000000
 HDNode.LENGTH = 78
-HDNode.MASTER_SECRET = Buffer.from('swiftcash seed', 'utf8')
+HDNode.MASTER_SECRET = Buffer.from('monetaryunit seed', 'utf8')
 
 HDNode.fromSeedBuffer = function (seed, network) {
   typeforce(types.tuple(types.Buffer, types.maybe(types.Network)), arguments)
@@ -9596,9 +9596,9 @@ HDNode.fromBase58 = function (string, networks) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to swiftcash)
+  // otherwise, assume a network object (or default to monetaryunit)
   } else {
-    network = networks || NETWORKS.swiftcash
+    network = networks || NETWORKS.monetaryunit
   }
 
   if (version !== network.bip32.private &&
@@ -9733,7 +9733,7 @@ HDNode.prototype.toBase58 = function (__isPrivate) {
   return base58check.encode(buffer)
 }
 
-// https://github.com/swiftcash/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions
+// https://github.com/muecoin/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions
 HDNode.prototype.derive = function (index) {
   typeforce(types.UInt32, index)
 
@@ -9846,7 +9846,7 @@ HDNode.prototype.derivePath = function (path) {
 
 module.exports = HDNode
 
-},{"./crypto":83,"./ecpair":85,"./networks":89,"./types":116,"bigi":6,"bs58swiftcheck":51,"create-hmac":56,"ecurve":60,"safe-buffer":71,"typeforce":119}],88:[function(require,module,exports){
+},{"./crypto":83,"./ecpair":85,"./networks":89,"./types":116,"bigi":6,"bs58monetaryunitcheck":51,"create-hmac":56,"ecurve":60,"safe-buffer":71,"typeforce":119}],88:[function(require,module,exports){
 var script = require('./script')
 
 var templates = require('./templates')
@@ -9880,16 +9880,16 @@ module.exports = {
 
 },{"./address":80,"./block":81,"./bufferutils":82,"./crypto":83,"./ecpair":85,"./ecsignature":86,"./hdnode":87,"./networks":89,"./script":90,"./templates":92,"./transaction":114,"./transaction_builder":115,"bitcoin-ops":9}],89:[function(require,module,exports){
 module.exports = {
-  swiftcash: {
-    messagePrefix: 'DarkNet Signed Message:\n',
-    bech32: 'bc',
+  monetaryunit: {
+    messagePrefix: 'MonetaryUnit Signed Message:\n',
+    bech32: 'mu',
     bip32: {
-      public: 0x0488b21e,
-      private: 0x0488ade4
+      public: 0x022d2533,
+      private: 0x0221312b
     },
-    pubKeyHash: 0x3f,
-    scriptHash: 0x12,
-    wif: 0xbf
+    pubKeyHash: 0x10,
+    scriptHash: 0x4c,
+    wif: 0x7e
   },
   testnet: {
     messagePrefix: 'DarkNet Signed Message:\n',
@@ -10774,7 +10774,7 @@ Transaction.prototype.clone = function () {
 /**
  * Hash transaction for signing a specific input.
  *
- * swiftcash uses a different hash for each signed transaction input.
+ * monetaryunit uses a different hash for each signed transaction input.
  * This method copies the transaction, makes the necessary changes based on the
  * hashType, and then hashes the result.
  * This hash can then be used to sign the provided transaction input.
@@ -10782,7 +10782,7 @@ Transaction.prototype.clone = function () {
 Transaction.prototype.hashForSignature = function (inIndex, prevOutScript, hashType) {
   typeforce(types.tuple(types.UInt32, types.Buffer, /* types.UInt8 */ types.Number), arguments)
 
-  // https://github.com/swiftcash/swiftcash/blob/master/src/test/sighash_tests.cpp#L29
+  // https://github.com/muecoin/MUE/blob/master/src/test/sighash_tests.cpp#L29
   if (inIndex >= this.ins.length) return ONE
 
   // ignore OP_CODESEPARATOR
@@ -10805,7 +10805,7 @@ Transaction.prototype.hashForSignature = function (inIndex, prevOutScript, hashT
 
   // SIGHASH_SINGLE: ignore all outputs, except at the same index?
   } else if ((hashType & 0x1f) === Transaction.SIGHASH_SINGLE) {
-    // https://github.com/swiftcash/swiftcash/blob/master/src/test/sighash_tests.cpp#L60
+    // https://github.com/muecoin/MUE/blob/master/src/test/sighash_tests.cpp#L60
     if (inIndex >= this.outs.length) return ONE
 
     // truncate outputs after
@@ -11491,7 +11491,7 @@ function buildInput (input, allowIncomplete) {
 
 function TransactionBuilder (network, maximumFeeRate) {
   this.prevTxMap = {}
-  this.network = network || networks.swiftcash
+  this.network = network || networks.monetaryunit
 
   // WARNING: This is __NOT__ to be relied on, its just another potential safety mechanism (safety in-depth)
   this.maximumFeeRate = maximumFeeRate || 1000
@@ -12398,7 +12398,7 @@ module.exports = { encode: encode, decode: decode, encodingLength: encodingLengt
 
 },{"safe-buffer":71}],122:[function(require,module,exports){
 (function (Buffer){
-var bs58swiftcheck = require('bs58swiftcheck')
+var bs58monetaryunitcheck = require('bs58monetaryunitcheck')
 
 function decodeRaw (buffer, version) {
   // check version only if defined
@@ -12440,13 +12440,13 @@ function encodeRaw (version, privateKey, compressed) {
 }
 
 function decode (string, version) {
-  return decodeRaw(bs58swiftcheck.decode(string), version)
+  return decodeRaw(bs58monetaryunitcheck.decode(string), version)
 }
 
 function encode (version, privateKey, compressed) {
-  if (typeof version === 'number') return bs58swiftcheck.encode(encodeRaw(version, privateKey, compressed))
+  if (typeof version === 'number') return bs58monetaryunitcheck.encode(encodeRaw(version, privateKey, compressed))
 
-  return bs58swiftcheck.encode(
+  return bs58monetaryunitcheck.encode(
     encodeRaw(
       version.version,
       version.privateKey,
@@ -12463,7 +12463,7 @@ module.exports = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bs58swiftcheck":51,"buffer":130}],123:[function(require,module,exports){
+},{"bs58monetaryunitcheck":51,"buffer":130}],123:[function(require,module,exports){
 (function (Buffer){
 var bs58check = require('bs58check')
 
