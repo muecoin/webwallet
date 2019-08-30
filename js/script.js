@@ -1,16 +1,16 @@
-var CURRENT_COIN = 'SWIFT';
+var CURRENT_COIN = 'MUE';
 var PARAMS = {
-	'SWIFT': {
-		coingecko: 'swiftcash',
-		coinjs: cc.swiftcash,
-		qrColor: '3875CE',
+	'MUE': {
+		coingecko: 'monetaryunit',
+		coinjs: cc.monetaryunit,
+		qrColor: 'F8931A',
 		minFee: 0.002,
 		maxFee: 0.2,
 		txFee: 0.002,
-		explorer: 'https://explorer.swiftcash.cc/',
-		donation: 'SXucSXaV5HURNyJUWnPrVFHTdRzoU2u19F',
-		unspentApi: 'https://explorer.swiftcash.cc/api/unspent/',
-		sendApi: 'https://explorer.swiftcash.cc/api/pushtx/',
+		explorer: 'https://blockbook.monetaryunit.org/',
+		donation: '7qhVjgsbJWo1RRE7TNqyT4NWFAHBEKs8zL',
+		unspentApi: 'https://blockbook.monetaryunit.org/api/v1/utxo/',
+		sendApi: 'https://blockbook.monetaryunit.org/api/v1/sendtx/',
 		sendTxHex: 'tx_hex',
 		sendTxid1: 'txid',
 		unspentTxid: 'txid',
@@ -171,7 +171,7 @@ var loginPrivkey="";
 var keyPair="";
 function hashit(hash, callback) {
   for(i=0; i<100*1440; i++) {
-    hash = cc.swiftcash.crypto.keccak256(hash+passphrase);
+    hash = cc.monetaryunit.crypto.sha256(hash+passphrase);
     hash = hash.toString("hex");
   }
 
@@ -233,7 +233,7 @@ function login() {
 
   // Login with email + password
   passphrase = $("#email").val() + ";" + $("#password").val();
-  var hash = cc.swiftcash.crypto.keccak256(passphrase);
+  var hash = cc.monetaryunit.crypto.sha256(passphrase);
   $('#email').prop("disabled", true);
   $('#password').prop("disabled", true);
   $('#signin').prop("disabled", true);
@@ -250,7 +250,6 @@ function login() {
 function loadAddress() {
   $("#addr-balance-refresh").prop("disabled", true);
   $('#addr-balance').html('Balance: 0.00000000 ' + CURRENT_COIN);
-  $("#addr-balance").css("color", "#74bed8");
   $("#pwd-container").hide();
   $("#addr-container").show();
   $("#addr-qr").attr("src", "https://qr-generator.qrcode.studio/qr/custom?download=false&file=png&data=" + keyPair.getAddress() + "&size=400&config=%7B%22body%22%3A%22rounded-pointed%22%2C%22eye%22%3A%22frame6%22%2C%22eyeBall%22%3A%22ball6%22%2C%22erf1%22%3A%5B%22fv%22%5D%2C%22gradientColor1%22%3A%22%23" + PARAMS[CURRENT_COIN].qrColor + "%22%2C%22gradientColor2%22%3A%22%23" + PARAMS[CURRENT_COIN].qrColor + "%22%2C%22gradientType%22%3A%22radial%22%2C%22gradientOnEyes%22%3A%22true%22%2C%22logo%22%3A%22%22%7D");
@@ -411,7 +410,7 @@ var tx;
 function spendf() {
   var amount = Number($("#amount").val());
   const FEE = PARAMS[CURRENT_COIN].txFee + donation;
-  if(balance < FEE || SWIFT(amount+FEE) > balance) { alert("Insufficient funds! Minimum network fee is " + FEE + " " + CURRENT_COIN + "."); return; }
+  if(balance < FEE || MUE(amount+FEE) > balance) { alert("Insufficient funds! Minimum network fee is " + FEE + " " + CURRENT_COIN + "."); return; }
 
   // Validate the address
   try {
@@ -436,7 +435,7 @@ function spendf() {
   tx.addOutput($("#address").val(), Math.ceil(amount*100000000));
 
   // Add the change (if any)
-  var change = SWIFT(balance - amount - FEE);
+  var change = MUE(balance - amount - FEE);
   if(change > 0) {
     tx.addOutput(changeAddress, Math.ceil(change*100000000));
   }
@@ -518,7 +517,7 @@ function enableSendForm() {
   $('#send').prop("disabled", false).html("Send");
 }
 
-function SWIFT(a) {
+function MUE(a) {
   return Number(a.toFixed(8));
 }
 
@@ -529,7 +528,7 @@ function accept() {
 function copyWholeBalance() {
   const FEE = PARAMS[CURRENT_COIN].txFee + donation;
   if(balance - FEE > 0) {
-     $('#amount').val(SWIFT(balance - FEE));
+     $('#amount').val(MUE(balance - FEE));
   }
 }
 
