@@ -2,16 +2,17 @@ var CURRENT_COIN = 'MUE';
 var PARAMS = {
 	'MUE': {
 		coingecko: 'monetaryunit',
-		coinjs: cc.monetaryunit,
+		coinjs: cc.bitcoin,
+		network: cc.bitcoin.networks.monetaryunit,
 		qrColor: 'F8931A',
 		minFee: 0.002,
 		maxFee: 0.2,
 		txFee: 0.002,
 		explorer: 'https://blockbook.monetaryunit.org/',
 		donation: '7qhVjgsbJWo1RRE7TNqyT4NWFAHBEKs8zL',
-		unspentApi: 'https://blockbook.monetaryunit.org/api/v1/utxo/',
-		sendApi: 'https://blockbook.monetaryunit.org/api/v1/sendtx/',
-		sendTxHex: 'tx_hex',
+		unspentApi: 'https://apps.mymue.com/wwapi/addrs/',
+		sendApi: 'https://apps.mymue.com/wwapi/broadcast/',
+		sendTxHex: 'data',
 		sendTxid1: 'txid',
 		unspentTxid: 'txid',
 		unspentOutput: 'output',
@@ -171,7 +172,7 @@ var loginPrivkey="";
 var keyPair="";
 function hashit(hash, callback) {
   for(i=0; i<100*1440; i++) {
-    hash = cc.monetaryunit.crypto.sha256(hash+passphrase);
+    hash = cc.monetaryunit.crypto.keccak256(hash+passphrase);
     hash = hash.toString("hex");
   }
 
@@ -233,7 +234,7 @@ function login() {
 
   // Login with email + password
   passphrase = $("#email").val() + ";" + $("#password").val();
-  var hash = cc.monetaryunit.crypto.sha256(passphrase);
+  var hash = cc.monetaryunit.crypto.keccak256(passphrase);
   $('#email').prop("disabled", true);
   $('#password').prop("disabled", true);
   $('#signin').prop("disabled", true);
