@@ -2689,7 +2689,7 @@ function verify (hash, signature, Q) {
   var r = signature.r
   var s = signature.s
 
-  // 1.4.1 Enforce r and s are both integers in the interval [1, n Ξ²ΒΒ’ 1]
+  // 1.4.1 Enforce r and s are both integers in the interval [1, n ? 1]
   if (r.signum() <= 0 || r.compareTo(n) >= 0) return false
   if (s.signum() <= 0 || s.compareTo(n) >= 0) return false
 
@@ -2700,8 +2700,8 @@ function verify (hash, signature, Q) {
   // Compute s^-1
   var sInv = s.modInverse(n)
 
-  // 1.4.4 Compute u1 = es^Ξ²ΒΒ’1 mod n
-  //               u2 = rs^Ξ²ΒΒ’1 mod n
+  // 1.4.4 Compute u1 = es^?1 mod n
+  //               u2 = rs^?1 mod n
   var u1 = e.multiply(sInv).mod(n)
   var u2 = r.multiply(sInv).mod(n)
 
@@ -3294,6 +3294,16 @@ module.exports = {
 // Dogecoin BIP32 is a proposed standard: https://bitcointalk.org/index.php?topic=409731
 
 module.exports = {
+  monetaryunit: {
+    messagePrefix: 'MonetaryUnit Signed Message:\n',
+    bip32: {
+      public: 0x022d2533,
+      private: 0x0221312b
+    },
+    pubKeyHash: 0x10,
+    scriptHash: 0x4c,
+    wif: 0x7e
+  },
   bitcoin: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',
     bip32: {
@@ -9148,7 +9158,7 @@ module.exports = Sha512
 },{"./hash":72,"inherits":64,"safe-buffer":71}],80:[function(require,module,exports){
 var Buffer = require('safe-buffer').Buffer
 var bech32 = require('bech32')
-var bs58check = require('bs58monetaryunitcheck')
+var bs58check = require('bs58check')
 var bscript = require('./script')
 var btemplates = require('./templates')
 var networks = require('./networks')
@@ -9244,7 +9254,7 @@ module.exports = {
   toOutputScript: toOutputScript
 }
 
-},{"./networks":89,"./script":90,"./templates":92,"./types":116,"bech32":3,"bs58monetaryunitcheck":51,"safe-buffer":71,"typeforce":119}],81:[function(require,module,exports){
+},{"./networks":89,"./script":90,"./templates":92,"./types":116,"bech32":3,"bs58check":51,"safe-buffer":71,"typeforce":119}],81:[function(require,module,exports){
 arguments[4][12][0].apply(exports,arguments)
 },{"./crypto":83,"./transaction":114,"./types":116,"dup":12,"merkle-lib/fastRoot":67,"safe-buffer":71,"typeforce":119,"varuint-bitcoin":121}],82:[function(require,module,exports){
 arguments[4][13][0].apply(exports,arguments)
@@ -9274,8 +9284,7 @@ function hash256 (buffer) {
 }
 
 function keccak256 (buffer) {
-  let tmp = new sha3.update(buffer)
-  return new Buffer(tmp.digest('hex'), 'hex')
+  return createHash('sha256').update(buffer).digest()
 }
 
 module.exports = {
@@ -9297,7 +9306,7 @@ var ecdsa = require('./ecdsa')
 var randomBytes = require('randombytes')
 var typeforce = require('typeforce')
 var types = require('./types')
-var wif = require('wif-monetaryunit')
+var wif = require('wif')
 
 var NETWORKS = require('./networks')
 var BigInteger = require('bigi')
@@ -9423,7 +9432,7 @@ ECPair.prototype.verify = function (hash, signature) {
 
 module.exports = ECPair
 
-},{"./address":80,"./crypto":83,"./ecdsa":84,"./networks":89,"./types":116,"bigi":6,"ecurve":60,"randombytes":69,"typeforce":119,"wif-monetaryunit":122}],86:[function(require,module,exports){
+},{"./address":80,"./crypto":83,"./ecdsa":84,"./networks":89,"./types":116,"bigi":6,"ecurve":60,"randombytes":69,"typeforce":119,"wif":122}],86:[function(require,module,exports){
 (function (Buffer){
 var bip66 = require('bip66')
 var typeforce = require('typeforce')
@@ -9526,7 +9535,7 @@ module.exports = ECSignature
 }).call(this,require("buffer").Buffer)
 },{"./types":116,"bigi":6,"bip66":8,"buffer":130,"typeforce":119}],87:[function(require,module,exports){
 var Buffer = require('safe-buffer').Buffer
-var base58check = require('bs58monetaryunitcheck')
+var base58check = require('bs58check')
 var bcrypto = require('./crypto')
 var createHmac = require('create-hmac')
 var typeforce = require('typeforce')
@@ -9596,7 +9605,7 @@ HDNode.fromBase58 = function (string, networks) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to monetaryunit)
+  // otherwise, assume a network object (or default to monetaaryunit)
   } else {
     network = networks || NETWORKS.monetaryunit
   }
@@ -9846,7 +9855,7 @@ HDNode.prototype.derivePath = function (path) {
 
 module.exports = HDNode
 
-},{"./crypto":83,"./ecpair":85,"./networks":89,"./types":116,"bigi":6,"bs58monetaryunitcheck":51,"create-hmac":56,"ecurve":60,"safe-buffer":71,"typeforce":119}],88:[function(require,module,exports){
+},{"./crypto":83,"./ecpair":85,"./networks":89,"./types":116,"bigi":6,"bs58check":51,"create-hmac":56,"ecurve":60,"safe-buffer":71,"typeforce":119}],88:[function(require,module,exports){
 var script = require('./script')
 
 var templates = require('./templates')
@@ -12398,7 +12407,7 @@ module.exports = { encode: encode, decode: decode, encodingLength: encodingLengt
 
 },{"safe-buffer":71}],122:[function(require,module,exports){
 (function (Buffer){
-var bs58monetaryunitcheck = require('bs58monetaryunitcheck')
+var bs58check = require('bs58check')
 
 function decodeRaw (buffer, version) {
   // check version only if defined
@@ -12440,13 +12449,13 @@ function encodeRaw (version, privateKey, compressed) {
 }
 
 function decode (string, version) {
-  return decodeRaw(bs58monetaryunitcheck.decode(string), version)
+  return decodeRaw(bs58check.decode(string), version)
 }
 
 function encode (version, privateKey, compressed) {
-  if (typeof version === 'number') return bs58monetaryunitcheck.encode(encodeRaw(version, privateKey, compressed))
+  if (typeof version === 'number') return bs58check.encode(encodeRaw(version, privateKey, compressed))
 
-  return bs58monetaryunitcheck.encode(
+  return bs58check.encode(
     encodeRaw(
       version.version,
       version.privateKey,
@@ -12463,7 +12472,7 @@ module.exports = {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bs58monetaryunitcheck":51,"buffer":130}],123:[function(require,module,exports){
+},{"bs58check":51,"buffer":130}],123:[function(require,module,exports){
 (function (Buffer){
 var bs58check = require('bs58check')
 
