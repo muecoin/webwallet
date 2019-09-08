@@ -9605,7 +9605,7 @@ HDNode.fromBase58 = function (string, networks) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to monetaaryunit)
+  // otherwise, assume a network object (or default to monetaryunit)
   } else {
     network = networks || NETWORKS.monetaryunit
   }
@@ -9742,7 +9742,7 @@ HDNode.prototype.toBase58 = function (__isPrivate) {
   return base58check.encode(buffer)
 }
 
-// https://github.com/muecoin/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions
+// https://github.com/monetaryunit/bips/blob/master/bip-0032.mediawiki#child-key-derivation-ckd-functions
 HDNode.prototype.derive = function (index) {
   typeforce(types.UInt32, index)
 
@@ -10791,7 +10791,7 @@ Transaction.prototype.clone = function () {
 Transaction.prototype.hashForSignature = function (inIndex, prevOutScript, hashType) {
   typeforce(types.tuple(types.UInt32, types.Buffer, /* types.UInt8 */ types.Number), arguments)
 
-  // https://github.com/muecoin/MUE/blob/master/src/test/sighash_tests.cpp#L29
+  // https://github.com/monetaryunit/monetaryunit/blob/master/src/test/sighash_tests.cpp#L29
   if (inIndex >= this.ins.length) return ONE
 
   // ignore OP_CODESEPARATOR
@@ -10814,7 +10814,7 @@ Transaction.prototype.hashForSignature = function (inIndex, prevOutScript, hashT
 
   // SIGHASH_SINGLE: ignore all outputs, except at the same index?
   } else if ((hashType & 0x1f) === Transaction.SIGHASH_SINGLE) {
-    // https://github.com/muecoin/MUE/blob/master/src/test/sighash_tests.cpp#L60
+    // https://github.com/monetaryunit/monetaryunit/blob/master/src/test/sighash_tests.cpp#L60
     if (inIndex >= this.outs.length) return ONE
 
     // truncate outputs after
