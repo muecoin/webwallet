@@ -11,13 +11,14 @@ var PARAMS = {
 		explorer: 'https://blockbook.monetaryunit.org/',
 		donation: '7qhVjgsbJWo1RRE7TNqyT4NWFAHBEKs8zL',
 		unspentApi: 'https://apps.mymue.com/wwapi/addrs/',
-		sendApi: 'https://apps.mymue.com/wwapi/broadcast/',
-		sendTxHex: 'data',
+		sendApi: 'https://apps.mymue.com/webwalletapi/broadcast.php',
+		sendTxHex: 'tx_hex',
 		sendTxid1: 'txid',
 		unspentTxid: 'txid',
 		unspentOutput: 'output',
 		unspentValue: 'value',
-		unspentDivision: 1
+		unspentDivision: 1,
+		shortName: 'MUE'
 	},
 
         'BTC': {
@@ -457,6 +458,7 @@ function spendf() {
     dataType: "json",
     data: PARAMS[CURRENT_COIN].sendTxHex+"=" + tx.build().toHex(),
     success: function (result) {
+	
 	var T1 = PARAMS[CURRENT_COIN].sendTxid1;
 	var T2 = PARAMS[CURRENT_COIN].sendTxid2;
 	var txid = '';
@@ -492,8 +494,16 @@ function spendf() {
         $('#amount').prop("disabled", false).val("");
         $('#send').prop("disabled", false).html("Send");
         $('#sendprogress').hide();
+	if(PARAMS[CURRENT_COIN].coingecko == 'monetaryunit' && (error.responseText).substr(0,13) == "resultsuccess"){
+		balance = change;
+	   $('#addr-balance').html("Balance: " + balance.toFixed(8) + " " + CURRENT_COIN);
+	   USD = false;
+	   usdBalance = false;
+	   window.open(PARAMS[CURRENT_COIN].explorer + "tx/" + (error.responseText).substr((error.responseText).length - 64));
+	}else{
 	alert("Broadcast failed! Check console for the details!");
         console.log(error);
+	}
     }
   });
 }
@@ -536,7 +546,7 @@ function copyWholeBalance() {
 jQuery(document).ready(function() {
   // PWA Service Worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('../service-worker.js').catch(function(err) {
+    navigator.serviceWorker.register('service-worker.js').catch(function(err) {
       console.log(err);
     });
   }
